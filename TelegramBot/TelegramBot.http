@@ -1,6 +1,9 @@
 @TelegramBot_HostAddress = http://localhost:5162
 
-GET {{TelegramBot_HostAddress}}/weatherforecast/
-Accept: application/json
+POST https://ijhttp-examples.jetbrains.com/post
+Content-Type: application/json
 
-###
+{
+  "id": 999,
+  "value": "content"
+}

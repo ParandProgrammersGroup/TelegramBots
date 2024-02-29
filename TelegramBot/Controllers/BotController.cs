@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using Telegram.Bot.Filters;
-using Telegram.Bot.Services;
 using Telegram.Bot.Types;
+using TelegramBot.Filters;
+using TelegramBot.Services;
 
-namespace Telegram.Bot.Controllers;
+namespace TelegramBot.Controllers;
 
 public class BotController : ControllerBase
 {

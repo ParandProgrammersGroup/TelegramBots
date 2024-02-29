@@ -11,25 +11,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6cac3c11-978d-4237-9a3d-e10466c5846f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.TelegramBots/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.TelegramBots/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.TelegramBots/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.TelegramBots/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.TelegramBots/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TelegramBot/Controllers/BotController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TelegramBot/Extensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TelegramBot/Files/tux.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TelegramBot/Filters/ValidateTelegramBotRequestAttribute.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TelegramBot/Program.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TelegramBot/Properties/launchSettings.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TelegramBot/Services/ConfigureWebhook.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TelegramBot/Services/UpdateHandlers.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TelegramBot/TelegramBot.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TelegramBot/TelegramBot.http" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TelegramBot/appsettings.Development.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TelegramBot/appsettings.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TelegramBots.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.TelegramBot/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.TelegramBot/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.TelegramBot/.idea/indexLayout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.TelegramBot/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.TelegramBot/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.TelegramBot/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TelegramBot/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TelegramBot/Controllers/BotController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TelegramBot/Controllers/BotController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TelegramBot/Extensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TelegramBot/Extensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TelegramBot/Filters/ValidateTelegramBotRequestAttribute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TelegramBot/Filters/ValidateTelegramBotRequestAttribute.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TelegramBot/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TelegramBot/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TelegramBot/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TelegramBot/Properties/launchSettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TelegramBot/Services/ConfigureWebhook.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TelegramBot/Services/ConfigureWebhook.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TelegramBot/Services/UpdateHandlers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TelegramBot/Services/UpdateHandlers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TelegramBot/TelegramBot.http" beforeDir="false" afterPath="$PROJECT_DIR$/TelegramBot/TelegramBot.http" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TelegramBot/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/TelegramBot/appsettings.Development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TelegramBot/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TelegramBot/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +36,7 @@
   <component name="HttpClientSelectedEnvironments">
     <file url="jar://$APPLICATION_HOME_DIR$/plugins/restClient/lib/restClient.jar!/com/intellij/ws/rest/client/requests/collection/post-requests.http" environment="test" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -143,12 +141,24 @@
       <option name="presentableId" value="Default" />
       <updated>1708978370850</updated>
       <workItem from="1708978379297" duration="924000" />
-      <workItem from="1709048382204" duration="5546000" />
+      <workItem from="1709048382204" duration="6128000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />

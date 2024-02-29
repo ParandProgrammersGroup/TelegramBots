@@ -1,23 +1,18 @@
 using Microsoft.Extensions.Options;
+using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
+// ReSharper disable ReplaceWithPrimaryConstructorParameter
 
-namespace Telegram.Bot.Services;
+namespace TelegramBot.Services;
 
-public class ConfigureWebhook : IHostedService
+public class ConfigureWebhook(
+    ILogger<ConfigureWebhook> logger,
+    IServiceProvider serviceProvider,
+    IOptions<BotConfiguration> botOptions) : IHostedService
 {
-    private readonly ILogger<ConfigureWebhook> _logger;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly BotConfiguration _botConfig;
-
-    public ConfigureWebhook(
-        ILogger<ConfigureWebhook> logger,
-        IServiceProvider serviceProvider,
-        IOptions<BotConfiguration> botOptions)
-    {
-        _logger = logger;
-        _serviceProvider = serviceProvider;
-        _botConfig = botOptions.Value;
-    }
+    private readonly ILogger<ConfigureWebhook> _logger = logger;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly BotConfiguration _botConfig = botOptions.Value;
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
