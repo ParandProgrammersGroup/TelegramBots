@@ -11,15 +11,13 @@ namespace TelegramBot.Filters;
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class ValidateTelegramBotAttribute() : TypeFilterAttribute(typeof(ValidateTelegramBotFilter))
 {
-    private class ValidateTelegramBotFilter : IActionFilter
+    private class ValidateTelegramBotFilter(IOptionsSnapshot<BotConfiguration> options) : IActionFilter
     {
-        private readonly string _secretToken;
+        private readonly string _helperBotSecretToken =
+            options.Get(nameof(BotConfiguration.HelperBotSection)).SecretToken;
 
-        public ValidateTelegramBotFilter(IOptions<BotConfiguration> options)
-        {
-            var botConfiguration = options.Value;
-            _secretToken = botConfiguration.SecretToken;
-        }
+        private readonly string _classRegBotSecretToken =
+            options.Get(nameof(BotConfiguration.ClassRegistrationBotSection)).SecretToken;
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
@@ -27,19 +25,22 @@ public sealed class ValidateTelegramBotAttribute() : TypeFilterAttribute(typeof(
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            if (!IsValidRequest(context.HttpContext.Request))
+            if (IsValidRequest(context.HttpContext.Request)) return;
+            context.Result = new ObjectResult("\"X-Telegram-Bot-Api-Secret-Token\" is invalid")
             {
-                context.Result = new ObjectResult("\"X-Telegram-Bot-Api-Secret-Token\" is invalid")
-                {
-                    StatusCode = 403
-                };
-            }
+                StatusCode = 403
+            };
         }
 
         private bool IsValidRequest(HttpRequest request)
         {
-            var isSecretTokenProvided = request.Headers.TryGetValue("X-Telegram-Bot-Api-Secret-Token", out var secretTokenHeader);
-            return isSecretTokenProvided && string.Equals(secretTokenHeader, _secretToken, StringComparison.Ordinal);
+            var isSecretTokenProvided =
+                request.Headers.TryGetValue("X-Telegram-Bot-Api-Secret-Token", out var secretTokenHeader);
+            
+            var isSecretTokensEqual = string.Equals(secretTokenHeader, _helperBotSecretToken, StringComparison.Ordinal)
+                                      || string.Equals(secretTokenHeader, _classRegBotSecretToken, StringComparison.Ordinal);
+            
+            return isSecretTokenProvided && isSecretTokensEqual;
         }
     }
 }

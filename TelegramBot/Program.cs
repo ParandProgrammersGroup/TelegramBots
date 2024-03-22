@@ -1,15 +1,18 @@
 using Telegram.Bot;
 using TelegramBot;
-using TelegramBot.Controllers;
 using TelegramBot.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Setup Bot configuration
-var botConfigurationSection = builder.Configuration.GetSection(BotConfiguration.Configuration);
-builder.Services.Configure<BotConfiguration>(botConfigurationSection);
+var helperBotConfigurationSection = builder.Configuration.GetSection(BotConfiguration.HelperBotSection);
+var classRegistrationBotConfigurationSection = builder.Configuration.GetSection(BotConfiguration.ClassRegistrationBotSection);
 
-var botConfiguration = botConfigurationSection.Get<BotConfiguration>();
+builder.Services.Configure<BotConfiguration>(nameof(BotConfiguration.HelperBotSection),helperBotConfigurationSection);
+builder.Services.Configure<BotConfiguration>(nameof(BotConfiguration.ClassRegistrationBotSection), classRegistrationBotConfigurationSection);
+
+var helperBotConfiguration = helperBotConfigurationSection.Get<BotConfiguration>();
+var classRegistrationBotConfiguration = classRegistrationBotConfigurationSection.Get<BotConfiguration>();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -21,12 +24,22 @@ builder.Services.AddSwaggerGen();
 //  https://docs.microsoft.com/en-us/aspnet/core/fundamentals/http-requests#typed-clients
 //  https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests
 builder.Services.AddHttpClient("telegram_bot_client")
-    .AddTypedClient<ITelegramBotClient>((httpClient, sp) =>
+    .AddTypedClient<IReadOnlyDictionary<string,ITelegramBotClient>>(httpClient =>
     {
-        BotConfiguration? botConfig = sp.GetConfiguration<BotConfiguration>();
-        TelegramBotClientOptions options = new(botConfig.BotToken);
+        TelegramBotClientOptions helperBotOptions = new(helperBotConfiguration!.BotToken);
+        TelegramBotClientOptions classRegBotOptions = new(classRegistrationBotConfiguration!.BotToken);
+        var clients = new Dictionary<string, ITelegramBotClient>
+        {
+            [nameof(BotConfiguration.HelperBotSection)] = new TelegramBotClient(helperBotOptions, httpClient),
+            [nameof(BotConfiguration.ClassRegistrationBotSection)] = new TelegramBotClient(classRegBotOptions, httpClient)
+        };
+        return clients.AsReadOnly();
+    })
+    /*.AddTypedClient<ITelegramBotClient>(httpClient =>
+    {
+        TelegramBotClientOptions options = new(classRegistrationBotConfiguration!.BotToken);
         return new TelegramBotClient(options, httpClient);
-    });
+    })*/;
 
 // Dummy business-logic service
 builder.Services.AddScoped<UpdateHandlers>();
@@ -39,6 +52,7 @@ builder.Services.AddHostedService<ConfigureWebhook>();
 // The Telegram.Bot library heavily depends on Newtonsoft.Json library to deserialize
 // incoming webhook updates and send serialized responses back.
 // Read more about adding Newtonsoft.Json to ASP.NET Core pipeline:
+// ReSharper disable once CommentTypo
 //   https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-6.0#add-newtonsoftjson-based-json-format-support
 builder.Services
     .AddControllers()
@@ -47,7 +61,8 @@ builder.Services
 var app = builder.Build();
 // Construct webhook route from the Route configuration parameter
 // It is expected that BotController has single method accepting Update
-app.MapBotWebhookRoute<BotController>(route: botConfiguration!.Route);
+//app.MapBotWebhookRoute<BotController>(route: helperBotConfiguration!.Route);
+//app.MapBotWebhookRoute<BotController>(route: classRegistrationBotConfiguration!.Route);
 app.MapControllers();
 app.Run();
 
@@ -59,8 +74,8 @@ namespace TelegramBot
 #pragma warning restore RCS1110 // Declare type inside namespace.
 #pragma warning restore CA1050 // Declare types in namespaces
     {
-        public static readonly string Configuration = "BotConfiguration";
-
+        public const string HelperBotSection = "BotConfiguration:HelperBotConfiguration";
+        public const string ClassRegistrationBotSection = "BotConfiguration:ClassRegistrationBotConfiguration";
         public string BotToken { get; init; } = default!;
         public string HostAddress { get; init; } = default!;
         public string Route { get; init; } = default!;

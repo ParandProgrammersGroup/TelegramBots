@@ -7,16 +7,13 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TelegramBot.Services;
 
-public class UpdateHandlers
+public class UpdateHandlers(IReadOnlyDictionary<string, ITelegramBotClient> botClients, ILogger<UpdateHandlers> logger)
 {
-    private readonly ITelegramBotClient _botClient;
-    private readonly ILogger<UpdateHandlers> _logger;
-
-    public UpdateHandlers(ITelegramBotClient botClient, ILogger<UpdateHandlers> logger)
-    {
-        _botClient = botClient;
-        _logger = logger;
-    }
+    // ReSharper disable once ReplaceWithPrimaryConstructorParameter
+    private readonly ITelegramBotClient _helperBotClient = botClients[nameof(BotConfiguration.HelperBotSection)];
+    private readonly ITelegramBotClient _classRegBotClient = botClients[nameof(BotConfiguration.ClassRegistrationBotSection)];
+    // ReSharper disable once ReplaceWithPrimaryConstructorParameter
+    private readonly ILogger<UpdateHandlers> _logger = logger;
 
 #pragma warning disable IDE0060 // Remove unused parameter
 #pragma warning disable RCS1163 // Unused parameter.
@@ -35,7 +32,7 @@ public class UpdateHandlers
         return Task.CompletedTask;
     }
 
-    public async Task HandleUpdateAsync(Update update, CancellationToken cancellationToken)
+    public async Task HandleHelperBotUpdateAsync(Update update, CancellationToken cancellationToken)
     {
         var handler = update switch
         {
@@ -56,6 +53,13 @@ public class UpdateHandlers
 
         await handler;
     }
+    public async Task<Message> HandleClassRegBotUpdateAsync(Update update, CancellationToken cancellationToken)
+    {
+        return await _classRegBotClient.SendTextMessageAsync(
+            chatId: update.Message!.Chat.Id,
+            text: "Test",
+            cancellationToken: cancellationToken);
+    }
 
     private async Task BotOnMessageReceived(Message message, CancellationToken cancellationToken)
     {
@@ -65,13 +69,13 @@ public class UpdateHandlers
 
         var action = messageText.Split(' ')[0] switch
         {
-            "/inline_keyboard" => SendInlineKeyboard(_botClient, message, cancellationToken),
-            "/keyboard" => SendReplyKeyboard(_botClient, message, cancellationToken),
-            "/remove" => RemoveKeyboard(_botClient, message, cancellationToken),
-            "/photo" => SendFile(_botClient, message, cancellationToken),
-            "/request" => RequestContactAndLocation(_botClient, message, cancellationToken),
-            "/inline_mode" => StartInlineQuery(_botClient, message, cancellationToken),
-            _ => Usage(_botClient, message, cancellationToken)
+            "/inline_keyboard" => SendInlineKeyboard(_helperBotClient, message, cancellationToken),
+            "/keyboard" => SendReplyKeyboard(_helperBotClient, message, cancellationToken),
+            "/remove" => RemoveKeyboard(_helperBotClient, message, cancellationToken),
+            "/photo" => SendFile(_helperBotClient, message, cancellationToken),
+            "/request" => RequestContactAndLocation(_helperBotClient, message, cancellationToken),
+            "/inline_mode" => StartInlineQuery(_helperBotClient, message, cancellationToken),
+            _ => Usage(_helperBotClient, message, cancellationToken)
         };
         Message sentMessage = await action;
         _logger.LogInformation("The message was sent with id: {SentMessageId}", sentMessage.MessageId);
@@ -215,12 +219,12 @@ public class UpdateHandlers
     {
         _logger.LogInformation("Received inline keyboard callback from: {CallbackQueryId}", callbackQuery.Id);
 
-        await _botClient.AnswerCallbackQueryAsync(
+        await _helperBotClient.AnswerCallbackQueryAsync(
             callbackQueryId: callbackQuery.Id,
             text: $"Received {callbackQuery.Data}",
             cancellationToken: cancellationToken);
 
-        await _botClient.SendTextMessageAsync(
+        await _helperBotClient.SendTextMessageAsync(
             chatId: callbackQuery.Message!.Chat.Id,
             text: $"Received {callbackQuery.Data}",
             cancellationToken: cancellationToken);
@@ -241,7 +245,7 @@ public class UpdateHandlers
                 inputMessageContent: new InputTextMessageContent("hello"))
         };
 
-        await _botClient.AnswerInlineQueryAsync(
+        await _helperBotClient.AnswerInlineQueryAsync(
             inlineQueryId: inlineQuery.Id,
             results: results,
             cacheTime: 0,
@@ -254,7 +258,7 @@ public class UpdateHandlers
     {
         _logger.LogInformation("Received inline result: {ChosenInlineResultId}", chosenInlineResult.ResultId);
 
-        await _botClient.SendTextMessageAsync(
+        await _helperBotClient.SendTextMessageAsync(
             chatId: chosenInlineResult.From.Id,
             text: $"You chose result with Id: {chosenInlineResult.ResultId}",
             cancellationToken: cancellationToken);

@@ -17,7 +17,6 @@ public static class WebHookExtensions
 
         return o.Value;
     }
-
     public static ControllerActionEndpointConventionBuilder MapBotWebhookRoute<T>(
         this IEndpointRouteBuilder endpoints,
         string route)
