@@ -14,10 +14,10 @@ public sealed class ValidateTelegramBotAttribute() : TypeFilterAttribute(typeof(
     private class ValidateTelegramBotFilter(IOptionsSnapshot<BotConfiguration> options) : IActionFilter
     {
         private readonly string _helperBotSecretToken =
-            options.Get(nameof(BotConfiguration.HelperBotSection)).SecretToken;
+            options.Get(BotConfiguration.HelperBotSection).SecretToken;
 
         private readonly string _classRegBotSecretToken =
-            options.Get(nameof(BotConfiguration.ClassRegistrationBotSection)).SecretToken;
+            options.Get(BotConfiguration.ClassRegistrationBotSection).SecretToken;
 
         public void OnActionExecuted(ActionExecutedContext context)
         {

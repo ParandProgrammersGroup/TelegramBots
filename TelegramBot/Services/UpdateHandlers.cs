@@ -10,8 +10,8 @@ namespace TelegramBot.Services;
 public class UpdateHandlers(IReadOnlyDictionary<string, ITelegramBotClient> botClients, ILogger<UpdateHandlers> logger)
 {
     // ReSharper disable once ReplaceWithPrimaryConstructorParameter
-    private readonly ITelegramBotClient _helperBotClient = botClients[nameof(BotConfiguration.HelperBotSection)];
-    private readonly ITelegramBotClient _classRegBotClient = botClients[nameof(BotConfiguration.ClassRegistrationBotSection)];
+    private readonly ITelegramBotClient _helperBotClient = botClients[BotConfiguration.HelperBotSection];
+    private readonly ITelegramBotClient _classRegBotClient = botClients[BotConfiguration.ClassRegistrationBotSection];
     // ReSharper disable once ReplaceWithPrimaryConstructorParameter
     private readonly ILogger<UpdateHandlers> _logger = logger;
 

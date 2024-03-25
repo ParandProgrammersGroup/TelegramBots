@@ -14,8 +14,10 @@ public class ConfigureWebhook(
     private readonly ILogger<ConfigureWebhook> _logger = logger;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
 
-    private static readonly string[] Bots = [nameof(BotConfiguration.HelperBotSection), nameof(BotConfiguration.ClassRegistrationBotSection)];
-    private readonly List<BotConfiguration> _botConfigs =
+    private static readonly string[] Bots =
+        [BotConfiguration.HelperBotSection, BotConfiguration.ClassRegistrationBotSection];
+
+    private readonly IReadOnlyList<BotConfiguration> _botConfigs =
     [
         botOptions.Get(Bots[0]),
         botOptions.Get(Bots[1])
@@ -26,11 +28,6 @@ public class ConfigureWebhook(
         using var scope = _serviceProvider.CreateScope();
         var botClients = scope.ServiceProvider.GetRequiredService<IReadOnlyDictionary<string, ITelegramBotClient>>();
 
-        // Configure custom endpoint per Telegram API recommendations:
-        // https://core.telegram.org/bots/api#setwebhook
-        // If you'd like to make sure that the webhook was set by you, you can specify secret data
-        // in the parameter secret_token. If specified, the request will contain a header
-        // "X-Telegram-Bot-Api-Secret-Token" with the secret token as content.
         for (var i = 0; i < botClients.Count; ++i)
         {
             var webhookAddress = $"{_botConfigs[i].HostAddress}/{_botConfigs[i].Route}";
@@ -46,10 +43,14 @@ public class ConfigureWebhook(
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         using var scope = _serviceProvider.CreateScope();
-        var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
+        var botClients = scope.ServiceProvider.GetRequiredService<IReadOnlyDictionary<string, ITelegramBotClient>>();
 
-        // Remove webhook on app shutdown
-        _logger.LogInformation("Removing webhook");
-        await botClient.DeleteWebhookAsync(cancellationToken: cancellationToken);
+        // Remove webhooks on app shutdown
+        for (var i = 0; i < botClients.Count; ++i)
+        {
+            _logger.LogInformation("Removing bot: {BotName} webhook",
+                await botClients[Bots[i]].GetMeAsync(cancellationToken));
+            await botClients[Bots[i]].DeleteWebhookAsync(cancellationToken: cancellationToken);
+        }
     }
 }

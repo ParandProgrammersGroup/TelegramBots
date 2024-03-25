@@ -19,13 +19,14 @@ public static class WebHookExtensions
     }
     public static ControllerActionEndpointConventionBuilder MapBotWebhookRoute<T>(
         this IEndpointRouteBuilder endpoints,
+        string name,
         string route)
     {
-        var controllerName = typeof(T).Name.Replace("Controller", "", StringComparison.Ordinal);
+        var controllerName = typeof(T).Name.Replace("Controller",string.Empty, StringComparison.Ordinal);
         var actionName = typeof(T).GetMethods()[0].Name;
 
         return endpoints.MapControllerRoute(
-            name: "bot_webhook",
+            name: $"{name} WebHook",
             pattern: route,
             defaults: new { controller = controllerName, action = actionName });
     }

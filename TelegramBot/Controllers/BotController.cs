@@ -6,7 +6,7 @@ using TelegramBot.Services;
 namespace TelegramBot.Controllers;
 
 [ApiController]
-[Route("api/bot")]
+[Route("api/[controller]")]
 public class BotController : ControllerBase
 {
     [Route("HelperBot")]
